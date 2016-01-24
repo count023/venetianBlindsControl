@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Venetian Blend Control</title>
+    <meta name="description" content="Controlling my venetian blinds by a nodemcu (eps8266)">
+    <meta name="author" content="count023">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+    <style>
+        BODY {
+            background-color: #eee;
+            color: #111;
+        }
+        .ui-page {
+            font: normal bold 12px/18px Arial, sans-serif;
+            padding: 10px;
+        }        
+        H1 {
+            line-height: 1.3em;
+            margin-bittom: 0.3em;
+        }
+        FIELDGROUP {
+            border: 1px solid grey;
+            border-radius: 15px;
+            display: block;
+            margin: 35px 0;
+            padding: 15px;
+            width: 95%;
+        }
+        FIELDGROUP LEGEND {
+            background-color: #eee;
+            border-left: 1px solid grey;
+            border-bottom: 1px solid grey;
+            float: left;
+            font-variant: small-caps;
+            font-weight: bold;
+            margin: -30px 0 0 0;
+            padding: 1px 10px;
+        }
+        .containing-element  { 
+            width: 12em;
+        }
+        .containing-element label{
+            text-align: center;
+        }
+        .ui-slider-track, .ui-slider-switch{
+            margin: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Venetian Blinds Control</h1>
+    <form id="blinds" action="http://<YOUR-NODEMCU-ESP8266-CURRENT-IP>/" method="post">
+        <fieldgroup>
+            <legend>open or close</legend>
+            <div class="containing-element">
+                <label for="blindsMove">Stop</label>
+                <input type="range" name="blindsMove" id="blindsMove" min="-1" max="1" value="0" data-highlight="true" >
+            </div>
+        </fieldgroup>
+        <fieldgroup>
+            <legend>turn</legend>
+            <div class="containing-element">
+                <label for="blindsTurn">Stop</label>
+                <input type="range" name="blindsTurn" id="blindsTurn" min="-1" max="1" value="0" data-highlight="true" >
+            </div>
+        </fieldgroup>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+    <script>
+        $(
+            function () {
+
+                $("#blindsMove").hide().on("change", function () {
+                    var $that = $(this),
+                        labelid = $that.prop("id") + "-label",
+                        newval = $that.val(),
+                        text = "Stop",
+                        $form = $(this.form);
+                    if (newval == -1){
+                        text = "Open";
+                    } else if (newval == 1){
+                        text = "Close"   
+                    }
+                    $("#" + labelid).html(text);
+                    $xhr = jQuery.ajax({
+                        url: $form.attr("action"),
+                        contentType: "application/x-www-form-urlencoded",
+                        data: "blindsMove=" + text.toLowerCase(),
+                        method: "POST",
+                        dataType: "json",
+                        crossDomain: true
+                    }).error(function () {
+                        console.log(arguments);
+                    });
+                });
+
+                $("#blindsTurn").hide().on("change", function () {
+                    var $that = $(this),
+                        labelid = $that.prop("id") + "-label",
+                        newval = $that.val(),
+                        text = "Stop",
+                        $form = $(this.form);
+                    if (newval == -1){
+                        text = "Left";
+                    } else if (newval == 1){
+                        text = "Right"   
+                    }
+                    $("#" + labelid).html(text);
+                    $xhr = jQuery.ajax({
+                        url: $form.attr("action"),
+                        contentType: "application/x-www-form-urlencoded",
+                        data: "blindsTurn=" + text.toLowerCase(),
+                        method: "PUT",
+                        dataType: "json",
+                        crossDomain: true
+                    }).error(function () {
+                        console.log(arguments);
+                    });
+                });
+            }
+        );
+    </script>
+</body>
+</html>
+
