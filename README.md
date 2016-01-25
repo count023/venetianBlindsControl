@@ -8,7 +8,7 @@ Needs an image for the Espressfi nodemcu/esp8226 (currently i'm using an custom 
 
 >	modules: node,file,gpio,wifi,net,pwm,tmr,uart,mqtt,dht,tsl2561
 
-About the files:
+## About the files:
 ```
     +- src
     | |
@@ -18,3 +18,6 @@ About the files:
     |
     +- venetian-blinds.html (needs to be served by an webserver inside yout local wifi area)
 ```
+
+## Wiring (just with LEDs so far):
+![Wiring Diagram made with fritzing](wiring_diagram.png)
