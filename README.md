@@ -3,7 +3,7 @@ Controlling my venetian blinds via wifi with a nodemcu (esp8266)
 
 Work in progress ...
 
-Needs an image for the Espressfi nodemcu/esp8226 (currently i'm using an custom build by frightanic.com):
+Needs an image for the Espressif nodemcu/esp8226 (currently i'm using an custom build by http://nodemcu-build.com/):
 >  SSL: false
 
 >	modules: node,file,gpio,wifi,net,pwm,tmr,uart,mqtt,dht,tsl2561
