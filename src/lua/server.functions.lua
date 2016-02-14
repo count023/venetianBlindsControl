@@ -42,7 +42,23 @@ function parseRequest(request)
     return method, path, _GET, _POST
 end
 
-function doPost(_GET, _POST)
+function writeResponse(statusMessage, responseBody)
+
+    local buf =  "HTTP/1.1 " .. statusMessage .. "\r\n"
+    buf = buf .. "Server: NodeMCU\r\n"
+    buf = buf .. "Access-Control-Allow-Origin: *\r\n"
+    buf = buf .. "Access-Control-Allow-Methods: POST, GET\r\n"
+    buf = buf .. "Access-Control-Max-Age: 1000\r\n"
+    buf = buf .. "Content-Type: application/json; charset=UTF-8\r\n"
+    buf = buf .. "\r\n"
+
+    buf = buf .. tableToJson(responseBody) .. "\r\n"
+
+    return buf
+end
+
+function doPost(path, _GET, _POST)
+    local statusMessage, responseBody = "", {}
 
     if _POST["blindsMove"] ~= nil then
         switchOff("open")
@@ -57,8 +73,32 @@ function doPost(_GET, _POST)
 
         switchOn(_POST["blindsTurn"])
     end
+    responseBody["status"] = "OK"
+    statusMessage = "200 OK"
+
+    return writeResponse(statusMessage, responseBody)
 end
 
-function doGet(_GET)
-    switchOffAnything()
+function doGet(path, _GET)
+    local statusMessage, responseBody = "", {}
+
+    if path == "/status" then
+        responseBody = status
+    else
+        switchOffAnything()
+        responseBody["status"] = "OK"
+    end
+    statusMessage = "200 OK"
+
+    return writeResponse(statusMessage, responseBody)
+end
+
+function doError(path)
+    local statusMessage, responseBody = "", {}
+
+    responseBody["status"] = "ERROR"
+    responseBody["message"] = "Sorry, do not understand your request"
+    statusMessage = "405 Method Not Allowed"
+
+    return writeResponse(statusMessage, responseBody)
 end

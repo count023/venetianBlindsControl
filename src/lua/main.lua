@@ -36,3 +36,10 @@ tmr.alarm(3, 1300, tmr.ALARM_AUTO, function()
         print("\n\Initiated! Ready for PUNK ;)\n\n")
     end
 end)
+
+status = {
+    -- completely "open", "close" or inbetween ("nil")
+    x = "nil",
+    -- completely turned "left", turned "right" or inbetween ("nil")
+    z = "nil"
+}

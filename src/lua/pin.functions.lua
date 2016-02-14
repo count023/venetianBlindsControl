@@ -19,7 +19,12 @@ end
 
 function switchOn(pinName)
     if pinBlinds[pinName] ~= nil then
-        gpio.write(pinBlinds[pinName], gpio.HIGH)
+        print(tableToJson(status))
+        print( (status["x"] ~= pinName and status["y"] ~= pinName) )
+        if status["x"] ~= pinName and status["y"] ~= pinName then
+            print("Writing HIGH to " .. pinName)
+            gpio.write(pinBlinds[pinName], gpio.HIGH)
+        end
     end
 end
 
